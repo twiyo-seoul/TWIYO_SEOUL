@@ -149,6 +149,45 @@ body{
     color:#111;
 }
 
+/* ===== GUIDE LANGUAGE TABS ===== */
+.guide-tabs{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-bottom:12px;
+}
+
+.guide-tab{
+    border:none;
+    border-radius:12px;
+    padding:11px 12px;
+    background:#f1f1f1;
+    color:#111;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.guide-tab.active{
+    background:var(--main);
+    color:#fff;
+}
+
+.guide-pdf-preview{
+    width:100%;
+    height:520px;
+    border:none;
+    border-radius:18px;
+    background:#f1f1f1;
+    margin-bottom:4px;
+}
+
+@media (max-width:600px){
+    .guide-pdf-preview{
+        height:430px;
+    }
+}
+
 /* ===== GETTING HERE PREVIEW ===== */
 .preview-scroll{
     display:flex;
@@ -243,25 +282,25 @@ Everything you need for a smooth arrival at TWIYO.<br>
 
     <!-- GETTING HERE -->
     <div class="card">
-    <div class="section-title">📍 Getting Here / 交通指南 / アクセス</div>
+        <div class="section-title">📍 Getting Here / 交通指南 / アクセス</div>
 
-    <div class="preview-scroll">
-        <a href="getting-here.pdf" target="_blank"><img src="gh1.jpg"></a>
-        <a href="getting-here.pdf" target="_blank"><img src="gh2.jpg"></a>
-        <a href="getting-here.pdf" target="_blank"><img src="gh3.jpg"></a>
-        <a href="getting-here.pdf" target="_blank"><img src="gh4.jpg"></a>
-        <a href="getting-here.pdf" target="_blank"><img src="gh5.jpg"></a>
-        <a href="getting-here.pdf" target="_blank"><img src="gh6.jpg"></a>
-        <a href="getting-here.pdf" target="_blank"><img src="gh7.jpg"></a>
-        <a href="getting-here.pdf" target="_blank"><img src="gh8.jpg"></a>
-        <a href="getting-here.pdf" target="_blank"><img src="gh9.jpg"></a>
-        <a href="getting-here.pdf" target="_blank"><img src="gh10.jpg"></a>
+        <div class="guide-tabs" role="tablist" aria-label="Guide language">
+            <button class="guide-tab active" type="button" onclick="switchGuide('en', this)">English</button>
+            <button class="guide-tab" type="button" onclick="switchGuide('zh', this)">中文</button>
+        </div>
+
+        <iframe
+            id="guide-preview"
+            class="guide-pdf-preview"
+            src="getting-here.pdf#view=FitH"
+            title="TWIYO SEOUL Getting Here Guide">
+        </iframe>
+
+        <a id="guide-view" href="getting-here.pdf" target="_blank" class="btn btn-soft">📖 View Full Guide</a>
+        <a id="guide-download" href="getting-here.pdf" download class="btn btn-primary">⬇️ Download PDF (English)</a>
     </div>
-
-    <a href="getting-here.pdf" target="_blank" class="btn btn-soft">📖 View Full Guide</a>
-    <a href="getting-here.pdf" download class="btn btn-primary">⬇️ Download PDF</a>
-</div>
-    <!-- MAP -->
+    
+<!-- MAP -->
 <div class="card">
     <div class="section-title">🗺️ Our Location / 住宿位置 / 所在地</div>
 
@@ -302,6 +341,34 @@ Everything you need for a smooth arrival at TWIYO.<br>
 </div>
 
 <script>
+function switchGuide(lang, button){
+    const guides = {
+        en: {
+            pdf: "getting-here.pdf",
+            viewText: "📖 View Full Guide",
+            downloadText: "⬇️ Download PDF (English)",
+            title: "TWIYO SEOUL Getting Here Guide - English"
+        },
+        zh: {
+            pdf: "getting-here-cn.pdf",
+            viewText: "📖 查看完整指南",
+            downloadText: "⬇️ 下载 PDF（中文）",
+            title: "TWIYO SEOUL 交通指南 - 中文"
+        }
+    };
+
+    const guide = guides[lang];
+    document.getElementById("guide-preview").src = guide.pdf + "#view=FitH";
+    document.getElementById("guide-preview").title = guide.title;
+    document.getElementById("guide-view").href = guide.pdf;
+    document.getElementById("guide-view").textContent = guide.viewText;
+    document.getElementById("guide-download").href = guide.pdf;
+    document.getElementById("guide-download").textContent = guide.downloadText;
+
+    document.querySelectorAll(".guide-tab").forEach(tab => tab.classList.remove("active"));
+    button.classList.add("active");
+}
+
 function openLightbox(src){
     document.getElementById("lightbox-img").src = src;
     document.getElementById("lightbox").style.display = "flex";
