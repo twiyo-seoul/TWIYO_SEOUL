@@ -173,20 +173,6 @@ body{
     color:#fff;
 }
 
-.guide-pdf-preview{
-    width:100%;
-    height:520px;
-    border:none;
-    border-radius:18px;
-    background:#f1f1f1;
-    margin-bottom:4px;
-}
-
-@media (max-width:600px){
-    .guide-pdf-preview{
-        height:430px;
-    }
-}
 
 /* ===== GETTING HERE PREVIEW ===== */
 .preview-scroll{
@@ -202,8 +188,9 @@ body{
 }
 .preview-scroll img{
     width:100%;
-    height:220px;
-    object-fit:cover;
+    height:auto;
+    display:block;
+    object-fit:contain;
     border-radius:18px;
     box-shadow:0 6px 16px rgba(0,0,0,.08);
 }
@@ -289,12 +276,7 @@ Everything you need for a smooth arrival at TWIYO.<br>
             <button class="guide-tab" type="button" onclick="switchGuide('zh', this)">中文</button>
         </div>
 
-        <iframe
-            id="guide-preview"
-            class="guide-pdf-preview"
-            src="getting-here.pdf#view=FitH"
-            title="TWIYO SEOUL Getting Here Guide">
-        </iframe>
+        <div class="preview-scroll" id="guide-preview" aria-label="Guide page previews"></div>
 
         <a id="guide-view" href="getting-here.pdf" target="_blank" class="btn btn-soft">📖 View Full Guide</a>
         <a id="guide-download" href="getting-here.pdf" download class="btn btn-primary">⬇️ Download PDF (English)</a>
@@ -345,12 +327,14 @@ function switchGuide(lang, button){
     const guides = {
         en: {
             pdf: "getting-here.pdf",
+            imagePrefix: "gh",
             viewText: "📖 View Full Guide",
             downloadText: "⬇️ Download PDF (English)",
             title: "TWIYO SEOUL Getting Here Guide - English"
         },
         zh: {
             pdf: "getting-here-cn.pdf",
+            imagePrefix: "gh-cn",
             viewText: "📖 查看完整指南",
             downloadText: "⬇️ 下载 PDF（中文）",
             title: "TWIYO SEOUL 交通指南 - 中文"
@@ -358,8 +342,25 @@ function switchGuide(lang, button){
     };
 
     const guide = guides[lang];
-    document.getElementById("guide-preview").src = guide.pdf + "#view=FitH";
-    document.getElementById("guide-preview").title = guide.title;
+    const preview = document.getElementById("guide-preview");
+
+    preview.innerHTML = "";
+    for (let i = 1; i <= 10; i++) {
+        const link = document.createElement("a");
+        link.href = guide.pdf;
+        link.target = "_blank";
+        link.rel = "noopener";
+
+        const img = document.createElement("img");
+        img.src = `${guide.imagePrefix}${i}.jpg`;
+        img.alt = `${guide.title} - Page ${i}`;
+        img.loading = i <= 2 ? "eager" : "lazy";
+
+        link.appendChild(img);
+        preview.appendChild(link);
+    }
+
+    preview.scrollLeft = 0;
     document.getElementById("guide-view").href = guide.pdf;
     document.getElementById("guide-view").textContent = guide.viewText;
     document.getElementById("guide-download").href = guide.pdf;
@@ -368,6 +369,12 @@ function switchGuide(lang, button){
     document.querySelectorAll(".guide-tab").forEach(tab => tab.classList.remove("active"));
     button.classList.add("active");
 }
+
+// Load the English preview when the page first opens.
+document.addEventListener("DOMContentLoaded", function(){
+    const firstTab = document.querySelector(".guide-tab.active");
+    switchGuide("en", firstTab);
+});
 
 function openLightbox(src){
     document.getElementById("lightbox-img").src = src;
@@ -380,6 +387,10 @@ function closeLightbox(){
 
 </body>
 </html>
+
+
+
+
 
 
 
