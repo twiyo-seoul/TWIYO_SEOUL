@@ -152,7 +152,7 @@ body{
 /* ===== GUIDE LANGUAGE TABS ===== */
 .guide-tabs{
     display:grid;
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:repeat(3, 1fr);
     gap:8px;
     margin-bottom:12px;
 }
@@ -274,6 +274,7 @@ Everything you need for a smooth arrival at TWIYO.<br>
         <div class="guide-tabs" role="tablist" aria-label="Guide language">
             <button class="guide-tab active" type="button" onclick="switchGuide('en', this)">English</button>
             <button class="guide-tab" type="button" onclick="switchGuide('zh', this)">中文</button>
+            <button class="guide-tab" type="button" onclick="switchGuide('ja', this)">日本語</button>
         </div>
 
         <div class="preview-scroll" id="guide-preview" aria-label="Guide page previews"></div>
@@ -338,6 +339,13 @@ function switchGuide(lang, button){
             viewText: "📖 查看完整指南",
             downloadText: "⬇️ 下载 PDF（中文）",
             title: "TWIYO SEOUL 交通指南 - 中文"
+        },
+        ja: {
+            pdf: "getting-here-jp.pdf",
+            imagePrefix: "gh-jp",
+            viewText: "📖 アクセスガイドを見る",
+            downloadText: "⬇️ PDFをダウンロード（日本語）",
+            title: "TWIYO SEOUL アクセスガイド - 日本語"
         }
     };
 
